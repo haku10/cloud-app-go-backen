@@ -1,0 +1,5 @@
+development:
+    dialect: mysql
+    datasource: root:password@tcp(cloud-go-google-api-db)/google-db?charset=utf8mb4&parseTime=true
+    dir: migrations
+    table: migrations

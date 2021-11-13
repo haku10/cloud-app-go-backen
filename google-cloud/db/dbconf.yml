@@ -1,0 +1,3 @@
+development:
+  driver: mymysql
+  open: $GOOSE_CONNECTION

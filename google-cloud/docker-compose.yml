@@ -1,0 +1,53 @@
+version: "3"
+services:
+  cloud-go-google-api-app:
+    build:
+      context: .
+      args:
+        GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
+    container_name: cloud_go_google_api
+    volumes:
+      - $HOME/.gcp:/usr/gcp
+      - ./:/go/src/
+    ports:
+      - "9671:8080"
+    tty: true
+    stdin_open: true
+    depends_on:
+      - cloud-go-google-api-db
+    env_file:
+      - .env
+    volumes:
+      - .:/go/src/
+    links:
+      - cloud-go-google-api-db
+  cloud-go-google-api-db:
+    image: mysql:8.0
+    container_name: cloud_go_google_db
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.mysql
+    environment:
+      TZ: "Asia/Tokyo"
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: google-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - 9672:3306
+    tty: true
+    volumes:
+      - cloud-go-google-api-db:/var/lib/mysql
+      - ./mysql/mysql-confd:/etc/mysql/conf.d
+  cloud-go-google-api-dynamo-db:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - 9673:8000
+    command: "-jar DynamoDBLocal.jar -dbPath /data -sharedDb"
+    volumes:
+      - cloud-go-google-api-dynamo-db:/home/dynamodblocal
+      - ./db/dynamoDB/data:/data
+volumes:
+  cloud-go-google-api-db:
+  cloud-go-google-api-dynamo-db:
+    driver: local
