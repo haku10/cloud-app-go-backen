@@ -6,9 +6,6 @@ services:
       args:
         GOOGLE_APPLICATION_CREDENTIALS: $GOOGLE_APPLICATION_CREDENTIALS
     container_name: cloud_go_google_api
-    volumes:
-      - $HOME/.gcp:/usr/gcp
-      - ./:/go/src/
     ports:
       - "9671:8080"
     tty: true
@@ -18,7 +15,8 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/go/src/
+      - $HOME/.gcp:/usr/gcp
+      - ./:/go/src/
     links:
       - cloud-go-google-api-db
   cloud-go-google-api-db:
