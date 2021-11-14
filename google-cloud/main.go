@@ -9,19 +9,26 @@ import (
 )
 
 func main() {
-		engine := gin.Default()
-    engine.GET("/", func(c *gin.Context) {
-        c.JSON(http.StatusOK, gin.H{
-            "message": "hello world",
-        })
-        })
+	engine := gin.Default()
+	engine.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "hello world",
+		})
+	})
 
-    engine.GET("/test", func(c *gin.Context) {
-        userName := service.Regist()
-        c.JSON(http.StatusOK, gin.H{
-            "message": userName,
-        })
-        })
+	engine.GET("/test", func(c *gin.Context) {
+		userName := service.Regist()
+		c.JSON(http.StatusOK, gin.H{
+			"message": userName,
+		})
+	})
 
-    engine.Run()
+	engine.POST("/gcs", func(c *gin.Context) {
+		service.StorageOutput()
+		c.JSON(http.StatusOK, gin.H{
+			"message": "file output",
+		})
+	})
+
+	engine.Run()
 }

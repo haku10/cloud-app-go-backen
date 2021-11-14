@@ -15,6 +15,14 @@ https://console.cloud.google.com/
 ※ ホスト側の`$HOME/.gcp`がコンテナの`/usr/gcp`にマウントされているため、
 上記の設定でコンテナ側の環境変数として設定される
 
+## アップロード処理を行うときはバケット名は各自で作成したものを使用する
+GOOGLE_STORAGE_BUCKET=バケット名
+GOOGLE_STORAGE_FOLDER=フォルダー名
+を.envファイルに設定する
+例)
+GOOGLE_STORAGE_BUCKET=test_file_output
+GOOGLE_STORAGE_FOLDER=test-folder
+
 
 ##　バックエンドの立ち上げ
 ### ビルド
