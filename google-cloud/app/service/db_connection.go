@@ -8,6 +8,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+// GormConnect はmySQLとの接続関数
 func GormConnect() *gorm.DB {
   DBMS := "mysql"
 
