@@ -9,6 +9,8 @@ services:
     ports:
       - "9671:8080"
     tty: true
+    restart: always
+    command: go run main.go
     stdin_open: true
     depends_on:
       - cloud-go-google-api-db
