@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"restapi/app/service"
 
@@ -16,10 +17,28 @@ func main() {
 		})
 	})
 
-	engine.GET("/test", func(c *gin.Context) {
-		userName := service.Regist()
+	engine.GET("/text", func(c *gin.Context) {
+		id := c.Query("id")
+		fmt.Print(id)
 		c.JSON(http.StatusOK, gin.H{
-			"message": userName,
+			"id": id,
+		})
+	})
+
+	engine.GET("/text/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		fmt.Print(id)
+		c.JSON(http.StatusOK, gin.H{
+			"id": id,
+		})
+	})
+
+	engine.POST("/test", func(c *gin.Context) {
+		name := c.PostForm("name")
+		user := service.Regist(name)
+		c.JSON(http.StatusOK, gin.H{
+			"userId":   user.Id,
+			"userName": user.Name,
 		})
 	})
 
