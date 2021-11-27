@@ -1,0 +1,51 @@
+version: "3"
+services:
+  go_aws_service-api-app:
+    build:
+      context: .
+    container_name: go_aws_service_api
+    ports:
+      - "9681:8080"
+    tty: true
+    restart: always
+    command: go run main.go
+    stdin_open: true
+    depends_on:
+      - go_aws_service-api-db
+    env_file:
+      - .env
+    volumes:
+      - $HOME/.aws:$HOME/.aws
+      - ./:/go/src/
+    links:
+      - go_aws_service-api-db
+  go_aws_service-api-db:
+    image: mysql:8.0
+    container_name: go_aws_service_db
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.mysql
+    environment:
+      TZ: "Asia/Tokyo"
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: aws-go-db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - 9682:3306
+    tty: true
+    volumes:
+      - go_aws_service-api-db:/var/lib/mysql
+      - ./mysql/mysql-confd:/etc/mysql/conf.d
+  go_aws_service-api-dynamo-db:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - 9683:8000
+    command: "-jar DynamoDBLocal.jar -dbPath /data -sharedDb"
+    volumes:
+      - go_aws_service-api-dynamo-db:/home/dynamodblocal
+      - ./db/dynamoDB/data:/data
+volumes:
+  go_aws_service-api-db:
+  go_aws_service-api-dynamo-db:
+    driver: local
